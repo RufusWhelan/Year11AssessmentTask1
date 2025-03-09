@@ -46,4 +46,22 @@
 * System will return an error message to the user if they try to add a pokemon to their team when they already have 6 pokemon
 
 ### Non-functional Specifications
+* To maintain user engagement, it is important that the system processes all inputs within 3 seconds. To ensure that the program runs effiently, classes and functions will be used to avoid repeating code.
+* To improve useability, simple terms wil be used to allow users to gain a clear and concise understanding of the system.
+* A potential problem that could need to be adresses is what happens when multiple of the same pokemon are added to the same team.
+
+## Use Cases
+### Actor:
+- User (Pokemon Enthusiast)
+### Preconditions: 
+- access to the internet and to the pokemon api (Pokeapi)
+### Main Flow:
+- ___Search:___ User enters the name of a pokemon. The system retrieves and displays its relevant information to the User. (e.g bst, ability, generation introduced, ect)
+- __Store/'Catch' Pokemon:__ User adds the pokemon to their team of 6 pokemon, system confirms this and stores the pokemon in a csv file.
+- __View Team:__ User can request to see their team, system shows the user their team.
+- __Remove/'release' Pokemon:__ User can remove a pokemon from their team, systems confirms this and changers the csv file accordingly.
+- __Give Move:__ User can give one  their pokemon moves. The system checks if the pokemon can learn that move and if it can, the pokemon is given that move.
+- __Check:__ User can get indepth information on an aspect of a given pokemon. (e.g Pokedex entries, level up moveset, ect)
+
+### Alternate Flow (User Challenges Elite Four)
 
