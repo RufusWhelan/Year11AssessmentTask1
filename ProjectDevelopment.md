@@ -48,7 +48,8 @@
 ### Non-functional Specifications
 * To maintain user engagement, it is important that the system processes all inputs within 3 seconds. To ensure that the program runs effiently, classes and functions will be used to avoid repeating code.
 * To improve useability, simple terms wil be used to allow users to gain a clear and concise understanding of the system.
-* A potential problem that could need to be adresses is what happens when multiple of the same pokemon are added to the same team.
+* A potential problem that could need to be adressed is what happens when multiple of the same pokemon are added to the same team.
+* Another potential issue the system could run into is if the api it is attempting to retrieve information is down. This should result in an error explaining that the API is down.
 
 ## Use Cases
 ### Actor:
@@ -56,12 +57,20 @@
 ### Preconditions: 
 - access to the internet and to the pokemon api (Pokeapi)
 ### Main Flow:
-- ___Search:___ User enters the name of a pokemon. The system retrieves and displays its relevant information to the User. (e.g bst, ability, generation introduced, ect)
+- __Search:__ User enters the name of a pokemon. The system retrieves and displays its relevant information to the User. (e.g bst, ability, generation introduced, ect)
 - __Store/'Catch' Pokemon:__ User adds the pokemon to their team of 6 pokemon, system confirms this and stores the pokemon in a csv file.
 - __View Team:__ User can request to see their team, system shows the user their team.
 - __Remove/'release' Pokemon:__ User can remove a pokemon from their team, systems confirms this and changers the csv file accordingly.
 - __Give Move:__ User can give one  their pokemon moves. The system checks if the pokemon can learn that move and if it can, the pokemon is given that move.
 - __Check:__ User can get indepth information on an aspect of a given pokemon. (e.g Pokedex entries, level up moveset, ect)
+- __Challenge:__ User challenges Elite Four with current team.
 
 ### Alternate Flow (User Challenges Elite Four)
+- __Attacking:__ User can select an attack, relevant effect/damage is calcuated and then  applied to opposing pokemon by system.
+- __Enememy Turn:__ System selects random move to be used by current enemy pokemon, favouring super effective moves.
+- __Switching:__ User can switch between their pokemon on their turn.
+- __Fainting:__ When a pokemons hit points reaches zero, it faints and can not be used in battle anymore
+- __Winning:__ when every pokemon is elimated on the user's team, they lose and the user is sent back to Main Flow. When every pokemon on the enemy's team faints, the user wins and the user is moved on to the next battle.
 
+### Postconditions:
+- Pokemon data is retrieved, displayed, stored, removed, checked or Elite Four is challenged. A pokemon turn is played out.
