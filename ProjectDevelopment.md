@@ -74,3 +74,4 @@
 
 ### Postconditions:
 - Pokemon data is retrieved, displayed, stored, removed, checked or Elite Four is challenged. A pokemon turn is played out.
+https://excalidraw.com/#json=97QCUmO8NdEOcS0Jl7esC,-25rEhP4iIEmVLpWnD_h8g
