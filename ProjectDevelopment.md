@@ -74,4 +74,35 @@
 
 ### Postconditions:
 - Pokemon data is retrieved, displayed, stored, removed, checked or Elite Four is challenged. A pokemon turn is played out.
-https://excalidraw.com/#json=jGyL5wMCbWokS9XW84KbK,CnrMULwDTUU7XBXkHeGozg
+```
+BEGIN main()
+    choice = ""
+    WHILE choice is not "end"
+        INPUT choice
+        IF API request valid THEN
+            If choice begins with "Search" THEN
+                Search_Pokemon
+            ELSEIF choice begins with "Store" THEN
+                Store_Pokemon 
+            ELSEIF choice begins with "Check" THEN
+                Check_Pokemon
+            ELSEIF choice is "view team" THEN
+                View_Team
+            ELSEIF choice begins with "Remove" THEN
+                Remove_Pokemon
+            ELSFIF choice begins with "Give Move" THEN
+                Give_Move
+            ELSEIF choice is challenge THEN
+                Challenge_
+
+        ELSE DISPLAY "Error connecting to API"
+END main()
+
+BEGIN Search_Pokemon()
+
+END Search_Pokemon()
+
+BEGIN View_Team()
+
+END View_Team()
+```
