@@ -1,7 +1,7 @@
 # Pokedex
 ## Requirements Definition
 ### Functional Requirements
-* User can search for a pokemon and have its base stat total, generation introduced, games it's available in and location found in its native region displayed
+* User can search for a pokemon and have its base stat total, generation introduced and games it's available.
 * User can add a searched pokemon to their team if they have less than 6 pokemon on their team.
 * Users Team is stored in a csv file
 * User can remove a pokemon from their team
@@ -77,6 +77,7 @@
 ```
 BEGIN main()
     choice = ""
+
     WHILE choice is not "end"
         INPUT choice
         IF API request valid THEN
@@ -93,16 +94,23 @@ BEGIN main()
             ELSFIF choice begins with "Give Move" THEN
                 Give_Move
             ELSEIF choice is challenge THEN
-                Challenge_
-
+                Challenge_  
+            ENDIF
         ELSE DISPLAY "Error connecting to API"
+        ENDIF
 END main()
 
-BEGIN Search_Pokemon()
+BEGIN Search_Pokemon(searchedPokemon)
+    IF searchedPokemon is found in API THEN
+        DISPLAY searchedPokemon's bst, generation introduced and what games it is available in
+    ELSE
+        DISPLAY "pokemon could not be found"        
 
 END Search_Pokemon()
 
 BEGIN View_Team()
+    READ Team.CSV
+    DISPLAY  pokemon in team
 
 END View_Team()
 ```
