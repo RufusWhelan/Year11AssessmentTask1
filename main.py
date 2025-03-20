@@ -1,3 +1,5 @@
+import json
+
 def main():
     userinput = ""
 
@@ -10,11 +12,8 @@ def main():
     while userinput != "end":
         userinput = input("").lower()
         if userinput.startswith("search "):
-            userinput = userinput.replace("search ", "")
-            print("here's that pokemon's details!")
             pokemonName = userinput.replace("search ", "") #removes the key term used so that the name of the pokemon can be found by the api
             print(Search_Pokemon(pokemonName))
-
 
         elif userinput.startswith("store "):
             pokemonName = userinput.replace("store ", "") #removes the key term used so that the name of the pokemon can be found by the api
@@ -48,11 +47,12 @@ def main():
         else:
             print("invalid input")
 
+
 def Search_Pokemon(pokemon):
-    return "here's" + pokemon + "'s details!"
+    return "here's " + pokemon + "'s details!"
 
 def Store_Pokemon(pokemon):
-    return pokemon + "has been added to party!"
+    return pokemon + " has been added to party!"
 
 def Check_Pokemon(pokemon):
 
@@ -82,7 +82,7 @@ def View_Team():
     return "This is your team"
 
 def Remove_Pokemon(pokemon):
-    return pokemon + "has been removed from party!"
+    return pokemon + " has been removed from party!"
 
 #def Give_Move(pokemon):
 
