@@ -1,13 +1,17 @@
 def main():
+    userinput = ""
+
     userinput = "" 
     pokemonName = ""
     moveName = ""
     typeOfData = ""
+    
 
     while userinput != "end":
         userinput = input("").lower()
-        
         if userinput.startswith("search "):
+            userinput = userinput.replace("search ", "")
+            print("here's that pokemon's details!")
             pokemonName = userinput.replace("search ", "") #removes the key term used so that the name of the pokemon can be found by the api
             print(Search_Pokemon(pokemonName))
 
@@ -29,33 +33,20 @@ def main():
         
         elif userinput.startswith("give "):
             pokemonName = userinput.replace("give ", "")
+            #will add function once api is implemented
+        
+        elif userinput == "challenge":
+            print("Goodluck")
+            #will implement once rest of project is complete
+
+        elif userinput == "help":
+            print(help())
 
         elif userinput == "end":
             print("goodbye")
 
         else:
-            print("invalid input")  
-
-def Search_Pokemon():
-    return
-
-def Store_Pokemon():
-    return
-
-def Check_Pokemon():
-    return  
-
-def View_Team():
-    return
-
-def Remove_Pokemon():
-    return
-
-def Give_Move():
-    return
-
-def Challenge_():
-    return
+            print("invalid input")
 
 def Search_Pokemon(pokemon):
     return "here's" + pokemon + "'s details!"
@@ -93,11 +84,27 @@ def View_Team():
 def Remove_Pokemon(pokemon):
     return pokemon + "has been removed from party!"
 
-#$def Give_Move():
+#def Give_Move(pokemon):
 
 #def Challenge():
 
-#def help():
+def help():
+    return """the pokedex works based off of keywords followed by the name of a pokemon or other form of information.
+          the key words are:
+          search (pokemon) - returns information about the entered pokemon if it exists
+          store (pokemon) - adds the entered pokemon to your team
+          check (pokemon) (type of data) - checks specific information for a pokemon. 
+          your options for "check" are:
+            level up moveset
+            evolution line
+            bst distribution
+            type
+          view team - displays the pokemon in your party
+          remove (pokemon) - removes entered pokemon from your team
+          give move (move) (pokemon) - gives your pokemon the entered move if they are compattible
+          challenge - challenges the elite four and turns the pokedex into a battle simulator. WARNING there is no turning back once you enter the battle simulator until you lose.
+          end - quits the program
+          """
 
 
 
