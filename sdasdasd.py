@@ -1,0 +1,1 @@
+team = open("pokemonTeam.json", "x") 

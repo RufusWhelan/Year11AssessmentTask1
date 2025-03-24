@@ -3,11 +3,15 @@ import json
 def main():
     userinput = ""
 
-    userinput = "" 
     pokemonName = ""
     moveName = ""
     typeOfData = ""
-    
+
+    try:
+        file = open("pokemonTeam.json", "x")
+        file = open("pokemonTeam.json", "w")
+    except:
+        file = open("pokemonTeam.json", "w")
 
     while userinput != "end":
         userinput = input("").lower()
@@ -31,7 +35,7 @@ def main():
             print(Remove_Pokemon(pokemonName))
         
         elif userinput.startswith("give "):
-            pokemonName = userinput.replace("give ", "")
+            pokemonName = userinput.replace("give ", "") #removes the key term used so that the name of the pokemon can be found by the api
             #will add function once api is implemented
         
         elif userinput == "challenge":
@@ -52,7 +56,17 @@ def Search_Pokemon(pokemon):
     return "here's " + pokemon + "'s details!"
 
 def Store_Pokemon(pokemon):
-    return pokemon + " has been added to party!"
+    pokemonTeam = {"pokemon{i}" : {"name" : "", "bst" : {"hp" : 0, }, "moves" : {}} for i in range (1,7)}
+    with open("pokemonTeam.json", "w") as outfile:
+            json.dump(pokemonTeam, outfile)
+    #with open("pokemonTeam.json", "r") as openfile:
+        #pokemonTeam = json.load(openfile)
+    #for teamMember in pokemonTeam:
+       # if pokemonTeam[teamMember]["name"] == " ":
+        #    pokemonTeam[teamMember]["name"] = pokemon
+         #   with open("pokemonTeam.json", "w") as outfile:
+          #      json.dump(pokemonTeam, outfile)
+    return
 
 def Check_Pokemon(pokemon):
 
@@ -105,8 +119,6 @@ def help():
           challenge - challenges the elite four and turns the pokedex into a battle simulator. WARNING there is no turning back once you enter the battle simulator until you lose.
           end - quits the program
           """
-
-
 
 
 print("Hello there! Welcome to the world of pokémon! This world is inhabited by creatures called pokémon! For some people, pokémon are pets. Others use them for fights.")
