@@ -2,16 +2,18 @@ import json
 
 def main():
     userinput = ""
-
     pokemonName = ""
     moveName = ""
     typeOfData = ""
+    team = {}
+    pokemonInTeam = 0
 
-    try:
-        file = open("pokemonTeam.json", "x")
-        file = open("pokemonTeam.json", "w")
-    except:
-        file = open("pokemonTeam.json", "w")
+    # try:
+        # open("pokemonTeam.json", "x")
+    # except:
+        # open("pokemonTeam.json", "r")
+        
+        
 
     while userinput != "end":
         userinput = input("").lower()
@@ -21,8 +23,10 @@ def main():
 
         elif userinput.startswith("store "):
             pokemonName = userinput.replace("store ", "") #removes the key term used so that the name of the pokemon can be found by the api
-            print(Store_Pokemon(pokemonName))
-        
+            team, pokemonInTeam = Store_Pokemon(pokemonName, team, pokemonInTeam)
+            print(team)
+            print(pokemonInTeam)
+
         elif userinput.startswith("check "):
             pokemonName = userinput.replace("check ", "") #removes the key term used so that the name of the pokemon can be found by the api
             print(Check_Pokemon(pokemonName))
@@ -55,18 +59,22 @@ def main():
 def Search_Pokemon(pokemon):
     return "here's " + pokemon + "'s details!"
 
-def Store_Pokemon(pokemon):
-    pokemonTeam = {"pokemon{i}" : {"name" : "", "bst" : {"hp" : 0, }, "moves" : {}} for i in range (1,7)}
+def Store_Pokemon(pokemon, pokemonTeam, counter):
+    with open("pokemonTeam.json", "r") as openfile:
+        pokemonTeam = json.load(openfile)
+    if counter < 6:
+        pokemonTeam[pokemon] = {
+            "moves": {"move1": "", "move2": "", "move3": "", "move4": ""},
+            "bst": {"hp": 0, "atk": 0, "sp.atk": 0, "def": 0, "sp.def": 0, "spd": 0},
+        }
+        counter += 1
+    else:
+        print("you already have 6 pokemon, remove one before you try to add another.")
+    jsonTeam = json.dumps(pokemonTeam)
+
     with open("pokemonTeam.json", "w") as outfile:
-            json.dump(pokemonTeam, outfile)
-    #with open("pokemonTeam.json", "r") as openfile:
-        #pokemonTeam = json.load(openfile)
-    #for teamMember in pokemonTeam:
-       # if pokemonTeam[teamMember]["name"] == " ":
-        #    pokemonTeam[teamMember]["name"] = pokemon
-         #   with open("pokemonTeam.json", "w") as outfile:
-          #      json.dump(pokemonTeam, outfile)
-    return
+        outfile.write(jsonTeam)
+    return (pokemonTeam, counter)   
 
 def Check_Pokemon(pokemon):
 

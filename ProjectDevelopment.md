@@ -2,7 +2,7 @@
 ## Requirements Definition
 ### Functional Requirements
 * User can search for a pokemon and have its base stat total, generation introduced and games it's available.
-* User can add a searched pokemon to their team if they have less than 6 pokemon on their team.
+* User can add a pokemon to their team if they have less than 6 pokemon on their team.
 * Users Team is stored in a csv file
 * User can remove a pokemon from their team
 * User can view their team
@@ -109,7 +109,7 @@ BEGIN Search_Pokemon(searchedPokemon)
 END Search_Pokemon()
 
 BEGIN View_Team()
-    READ Team.CSV
+    READ Team.json
     DISPLAY  pokemon in team
 
 END View_Team()
