@@ -1,4 +1,5 @@
 import json
+import os
 
 def main():
     userinput = ""
@@ -7,14 +8,8 @@ def main():
     typeOfData = ""
     team = {}
     pokemonInTeam = 0
-
-    # try:
-        # open("pokemonTeam.json", "x")
-    # except:
-        # open("pokemonTeam.json", "r")
-        
-        
-
+    
+    start()
     while userinput != "end":
         userinput = input("").lower()
         if userinput.startswith("search "):
@@ -23,7 +18,7 @@ def main():
 
         elif userinput.startswith("store "):
             pokemonName = userinput.replace("store ", "") #removes the key term used so that the name of the pokemon can be found by the api
-            team, pokemonInTeam = Store_Pokemon(pokemonName, team, pokemonInTeam)
+            team, pokemonInTeam = Store_Pokemon(pokemonName, team)
             print(team)
             print(pokemonInTeam)
 
@@ -59,9 +54,11 @@ def main():
 def Search_Pokemon(pokemon):
     return "here's " + pokemon + "'s details!"
 
-def Store_Pokemon(pokemon, pokemonTeam, counter):
-    with open("pokemonTeam.json", "r") as openfile:
-        pokemonTeam = json.load(openfile)
+def Store_Pokemon(pokemon, pokemonTeam):
+    if os.path.exists("pokemonTeam.json") and os.path.getsize("pokemonTeam.json") > 0:
+        with open("pokemonTeam.json", "r") as openfile:
+            pokemonTeam = json.load(openfile)
+    counter = len(pokemonTeam)
     if counter < 6:
         pokemonTeam[pokemon] = {
             "moves": {"move1": "", "move2": "", "move3": "", "move4": ""},
@@ -128,7 +125,25 @@ def help():
           end - quits the program
           """
 
+def start():
+    try:
+        open("pokemonTeam.json", "x")
+        print ("Hello there! Welcome to the world of pokémon! This world is inhabited by creatures called pokémon! For some people, pokémon are pets. Others use them for fights.")
+    except:
+        if os.path.getsize("pokemonTeam.json") > 0:
+            restart = input("It appears that you already have a registered team. would you like to restart? ('yes' to clear memory, 'no' to continue with previous team): ").lower()
 
-print("Hello there! Welcome to the world of pokémon! This world is inhabited by creatures called pokémon! For some people, pokémon are pets. Others use them for fights.")
-print("If you require instructions try typing 'help' ")
+            if restart == "yes":
+                open("pokemonTeam.json", "w").close()
+                print ("Hello there! Welcome to the world of pokémon! This world is inhabited by creatures called pokémon! For some people, pokémon are pets. Others use them for fights.")
+
+            elif restart == "no":
+                print("welcome back young traveler")
+                
+            else:
+                print("invalid input")
+        else:
+            print ("Hello there! Welcome to the world of pokémon! This world is inhabited by creatures called pokémon! For some people, pokémon are pets. Others use them for fights.")
+
+    print("If you require instructions try typing 'help' ")
 main()
