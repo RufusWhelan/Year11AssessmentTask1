@@ -101,7 +101,7 @@ def Check_Pokemon(pokemon):
 
 
 def View_Team():
-    return "This is your team"
+    return "This is your team" 
 
 def Remove_Pokemon(pokemon):
     return pokemon + " has been removed from party!"
