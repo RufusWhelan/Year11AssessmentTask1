@@ -5,25 +5,21 @@ def main():
     pokemonName = ""
     moveName = ""
     typeOfData = ""
-    team = {}
-    pokemonInTeam = 0
     
     start()
     while userinput != "end":
-        userinput = input("").lower()
+        userinput = input("input: ").lower()
         if userinput.startswith("search "):
             pokemonName = userinput.replace("search ", "") #removes the key term used so that the name of the pokemon can be found by the api
             print(Search_Pokemon(pokemonName))
 
         elif userinput.startswith("store "):
             pokemonName = userinput.replace("store ", "") #removes the key term used so that the name of the pokemon can be found by the api
-            team, pokemonInTeam = Store_Pokemon(pokemonName, team)
-            print(team)
-            print(pokemonInTeam)
+            print(Store_Pokemon(pokemonName))
 
         elif userinput.startswith("check "):
             pokemonName = userinput.replace("check ", "") #removes the key term used so that the name of the pokemon can be found by the api
-            print(Check_Pokemon(pokemonName))
+            Check_Pokemon(pokemonName)
         
         elif userinput == "view team":
             print(View_Team())

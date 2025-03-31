@@ -13,17 +13,19 @@ def start():
     
     except:
         if os.path.getsize("pokemonTeam.json") > 0: #checks if the json file contains anything
-            restart = input("It appears that you already have a registered team. would you like to restart? ('yes' to clear memory, 'no' to continue with previous team): ").lower()
+            restart = ""
+            while restart not in ["yes", "no"]:
+                restart = input("It appears that you already have a registered team. would you like to restart? ('yes' to clear memory, 'no' to continue with previous team): ").lower()
 
-            if restart == "yes":
-                open("pokemonTeam.json", "w").close() #clears memory and resets the system
-                print ("Hello there! Welcome to the world of pokémon! This world is inhabited by creatures called pokémon! For some people, pokémon are pets. Others use them for fights.")
+                if restart == "yes":
+                    open("pokemonTeam.json", "w").close() #clears memory and resets the system
+                    print ("Hello there! Welcome to the world of pokémon! This world is inhabited by creatures called pokémon! For some people, pokémon are pets. Others use them for fights.")
 
-            elif restart == "no":
-                print("welcome back young traveler") #does not clear memory
-                
-            else:
-                print("invalid input")
+                elif restart == "no":
+                    print("welcome back young traveler") #does not clear memory
+                    
+                else:
+                    print("invalid input")
         else:
             print ("Hello there! Welcome to the world of pokémon! This world is inhabited by creatures called pokémon! For some people, pokémon are pets. Others use them for fights.") #since the file is empty, it is assumed that the user has not interacted with the system before
 
@@ -32,7 +34,7 @@ def start():
 def Search_Pokemon(pokemon):
     return "here's " + pokemon + "'s details!"
 
-def Store_Pokemon(pokemon, pokemonTeam):
+def Store_Pokemon(pokemon):
     """
         stores entered pokemon along with their relevant information 
         Arg:
@@ -43,6 +45,7 @@ def Store_Pokemon(pokemon, pokemonTeam):
 
         aditionally, the entered pokemon is saved in a json file for later use.
     """
+    pokemonTeam = {}
     if os.path.exists("pokemonTeam.json") and os.path.getsize("pokemonTeam.json") > 0: #checks if pokemonTeam.json exists and isn't empty
         with open("pokemonTeam.json", "r") as openfile: 
             pokemonTeam = json.load(openfile)  # assigns the dictionary in pokemonTeam.json to the variable pokemonTeam
@@ -51,19 +54,18 @@ def Store_Pokemon(pokemon, pokemonTeam):
 
     if counter < 6: #ensures the user has less than 6 pokemon
         pokemonTeam[pokemon] = {
-            "moves": {"move1": "", "move2": "", "move3": "", "move4": ""},
+            "moves": {},
             "bst": {"hp": 0, "atk": 0, "sp.atk": 0, "def": 0, "sp.def": 0, "spd": 0},
         } #assigns first four learnt moves and base stat total from the api 
 
-        counter += 1
     else:
-        print("you already have 6 pokemon, remove one before you try to add another.")
+        return("you already have 6 pokemon, remove one before you try to add another.")
 
     jsonTeam = json.dumps(pokemonTeam) #establishes a variable that json can read
 
     with open("pokemonTeam.json", "w") as outfile:
         outfile.write(jsonTeam) #saves the new pokemon to the json file 
-    return (pokemonTeam, counter)   
+    return(pokemon + " has been added to party!")   
 
 def Check_Pokemon(pokemon):
     """
@@ -99,12 +101,62 @@ def Check_Pokemon(pokemon):
 
 
 def View_Team():
-    return "This is your team" 
+    pokemonTeam = {}
+    if os.path.exists("pokemonTeam.json") and os.path.getsize("pokemonTeam.json") > 0: #checks if pokemonTeam.json exists and isn't empty
+        with open("pokemonTeam.json", "r") as openfile: 
+            pokemonTeam = json.load(openfile)  # assigns the dictionary in pokemonTeam.json to the variable pokemonTeam
+    
+        print("your current team is:")
+        for key in pokemonTeam:
+            print(key)
+    else:
+        print("you don't have a team.")
 
 def Remove_Pokemon(pokemon):
-    return pokemon + " has been removed from party!"
+    pokemonTeam = {}
+    if os.path.exists("pokemonTeam.json") and os.path.getsize("pokemonTeam.json") > 0: #checks if pokemonTeam.json exists and isn't empty
+        with open("pokemonTeam.json", "r") as openfile: 
+            pokemonTeam = json.load(openfile)  # assigns the dictionary in pokemonTeam.json to the variable pokemonTeam
+        if pokemon in pokemonTeam:
+            del pokemonTeam[pokemon]
+        
+        else:
+            return(pokemon + " is not in your party")
 
-#def Give_Move(pokemon):
+        jsonTeam = json.dumps(pokemonTeam) #establishes a variable that json can read
+
+        with open("pokemonTeam.json", "w") as outfile:
+            outfile.write(jsonTeam) #saves the new pokemon to the json file 
+
+        return(pokemon + " has been removed from party!")
+    
+    else: 
+        return("you don't have a team.")
+    
+    
+"""
+def Give_Move(pokemonAndMove):
+    pokemon, move = pokemonAndMove.split(' ', 1)
+    if os.path.exists("pokemonTeam.json") and os.path.getsize("pokemonTeam.json") > 0: #checks if pokemonTeam.json exists and isn't empty
+        with open("pokemonTeam.json", "r") as openfile: 
+            pokemonTeam = json.load(openfile)  # assigns the dictionary in pokemonTeam.json to the variable pokemonTeam
+
+    counter = len(pokemonTeam["moves"])
+
+    if pokemon in pokemonTeam:
+        current_moves = pokemonTeam[pokemon].get("moves", []) # Get the current list of moves for the Pokémon
+            
+        if len(current_moves) < 4: # Check if the Pokémon already has 4 moves
+            current_moves.append(move) 
+            pokemonTeam[pokemon]["moves"] = current_moves # Update the Pokémon's moves
+    
+    jsonTeam = json.dumps(pokemonTeam) #establishes a variable that json can read
+
+    with open("pokemonTeam.json", "w") as outfile:
+            outfile.write(jsonTeam) #saves the new pokemon to the json file 
+    
+    return "gave " + pokemon + " " + move
+""" 
 
 #def Challenge():
 
@@ -114,7 +166,7 @@ def help():
     return """the pokedex works based off of keywords followed by the name of a pokemon or other form of information.
           the key words are:
           search (pokemon) - returns information about the entered pokemon if it exists
-          store (pokemon) - adds the entered pokemon to your team
+          store (pokemon) - adds the entered pokemon to your team. You CANNOT store multiple of the same pokemon
           check (pokemon) (type of data) - checks specific information for a pokemon. 
           your options for "check" are:
             level up moveset
