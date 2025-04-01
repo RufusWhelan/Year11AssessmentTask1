@@ -24,13 +24,18 @@ def main():
         elif userinput == "view team":
             print(View_Team())
 
-        elif userinput.startswith("remove "):
+        elif userinput.startswith("remove ") and "from" not in userinput:
             pokemonName = userinput.replace("remove ", "") #removes the key term used so that the name of the pokemon can be found by the api
             print(Remove_Pokemon(pokemonName))
         
         elif userinput.startswith("give "):
             pokemonName = userinput.replace("give ", "") #removes the key term used so that the name of the pokemon can be found by the api
-            #will add function once api is implemented
+            print(Give_Move(pokemonName))
+        
+        elif userinput.startswith("remove ")  and "from" in userinput:
+            pokemonName = userinput.replace ("remove ", "")
+            print(remove_Move(pokemonName))
+            
         
         elif userinput == "challenge":
             print("Goodluck")
