@@ -122,7 +122,7 @@ def View_Team():
    
         print("your current team is:")
         for key in pokemonTeam:
-            print(key)
+            print(key) #displays the name of pokemon in the users party
     else:
         print("you don't have a team.")
 
@@ -156,20 +156,21 @@ def Give_Move(pokemonAndMove):
         with open("pokemonTeam.json", "r") as openfile:
             pokemonTeam = json.load(openfile)  # assigns the dictionary in pokemonTeam.json to the variable pokemonTeam
 
-    response = requests.get(f"{pokeAPI}{pokemon.lower()}")
-    if pokemon in pokemonTeam:
-        if response.status_code == 200:
-            data = response.json()
+    if pokemon in pokemonTeam: #checks if the entered pokemon is in the users team
+        response = requests.get(f"{pokeAPI}{pokemon.lower()}") #makes a request to the api using the pokemons name.
+        if response.status_code == 200: #checks if the request returns a value in the api
+            data = response.json() #converts the api webpage to a readable json file
             canLearnMove = False
 
             for move_data in data['moves']:
                 if move_data['move']['name'] == move.lower():
                     canLearnMove = True
-                
+            #checks if the entered move can be found in the api and if it is found then the pokemon can learn that move
+
             if canLearnMove:
-                counter = len(pokemonTeam[pokemon]["moves"])
+                counter = len(pokemonTeam[pokemon]["moves"]) #checks how many moves the pokemon has to ensure that the pokemon doesn't learn more than 4 moves
                 if counter < 4:
-                    pokemonTeam[pokemon]["moves"][move] = move
+                    pokemonTeam[pokemon]["moves"][move] = move 
 
                     jsonTeam = json.dumps(pokemonTeam) #establishes a variable that json can read
 
