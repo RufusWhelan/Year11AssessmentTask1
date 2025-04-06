@@ -61,13 +61,15 @@
 - __Store/'Catch' Pokemon:__ User adds the pokemon to their team of 6 pokemon, system confirms this and stores the pokemon in a csv file.
 - __View Team:__ User can request to see their team, system shows the user their team.
 - __Remove/'release' Pokemon:__ User can remove a pokemon from their team, systems confirms this and changers the csv file accordingly.
-- __Give Move:__ User can give one  their pokemon moves. The system checks if the pokemon can learn that move and if it can, the pokemon is given that move.
+- __Give Move:__ User can give one their pokemon moves. The system checks if the pokemon can learn that move and if it can, the pokemon is given that move.
+- __Remove Move:__ User can remove moves from the pokemon on their teams.
 - __Check:__ User can get indepth information on an aspect of a given pokemon. (e.g Pokedex entries, level up moveset, ect)
 - __Challenge:__ User challenges Elite Four with current team.
 
 ### Alternate Flow (User Challenges Elite Four)
 - __Attacking:__ User can select an attack, relevant effect/damage is calcuated and then  applied to opposing pokemon by system.
 - __Enememy Turn:__ System selects random move to be used by current enemy pokemon, favouring super effective moves.
+- __Effects:__ system applies required effects to every current pokemon at the end of every turn.
 - __Switching:__ User can switch between their pokemon on their turn.
 - __Fainting:__ When a pokemons hit points reaches zero, it faints and can not be used in battle anymore
 - __Winning:__ when every pokemon is elimated on the user's team, they lose and the user is sent back to Main Flow. When every pokemon on the enemy's team faints, the user wins and the user is moved on to the next battle.
@@ -114,3 +116,12 @@ BEGIN View_Team()
 
 END View_Team()
 ```
+## Data Dictionary:
+|Variable|Data Type|Format for Display|Size in Bytes|Size for Display|Description|Example|Validation|
+|---|---|---|---|---|---|---|---|
+|pokemonName|string|XX...XX||||||
+|PokemonMove|string|XX...XX||||||
+|Counter|integer|N||||||
+|TypeOfData|string|XX...XX||||||
+|UserTeam(display)|dictionary|||||||
+|UserTeam(json)|dictionary|||||||
