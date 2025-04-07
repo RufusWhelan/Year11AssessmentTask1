@@ -3,7 +3,7 @@
 ### Functional Requirements
 * User can search for a pokemon and have its base stat total, generation introduced and games it's available.
 * User can add a pokemon to their team if they have less than 6 pokemon on their team.
-* Users Team is stored in a csv file
+* Users Team is stored in a json file
 * User can remove a pokemon from their team
 * User can view their team
 * User can add moves learnt by level up or tm to their pokemon, if user doesn't add any moves to their pokemon, then highest level moves it can learn will be selected.
@@ -22,15 +22,18 @@
 ### Functional Specifications
 #### __Inputs and Outputs__
 * User can input a string. If the the string matches the name of a pokemon, it should return its relevant information.
-* User can use the 'add' command followed by a pokemon name. The system should then store that pokemon and its relevant information in a csv file.
-* User can use the 'remove' command followed by a pokemon name. If the pokemon is currently on the users team the system should remove it from the csv file
+* User can use the 'add' command followed by a pokemon name. The system should then store that pokemon and its relevant information in a json file.
+* User can use the 'remove' command followed by a pokemon name. If the pokemon is currently on the users team the system should remove it from the json file.
+* User can use the 'give' command followed by a pokemon and move name name. If the pokemon is currently on the users team and the move exists, the system should add the move to the the pokemons move dictionary in the json file.
+* User can use the 'remove from' command followed by a pokemon name and move name. If the pokemon is currently on the users team with the entered move, it should be removed from the json file.
+* User can use the 'check' command followed by a pokemon name and type of data. If the pokemon is in the api, the relevant information should be returned.
 * User can use the 'challenge' command to challenge the elite four. The system should then take the pokemon inside the users team and simulate a battle.
 * In battle, User can select moves available to their pokemon or swap out. The system should be able to take these inputs and make relevant changes or calculations for the battle.
 
 #### __Core Features__
 * System needs to be able to search through pokeapi for relevant information
-* System needs to be able to store pokemon and their relevant infomation to a csv file
-* System needs to be able to remove pokemon and their relevant infomation from a csv file
+* System needs to be able to store pokemon and their relevant infomation to a json file
+* System needs to be able to remove pokemon and their relevant infomation from a json file
 * System needs to be able to simulate a pokemon battle by making relevant calcuations
 
 #### __User Interaction__
@@ -58,9 +61,9 @@
 - access to the internet and to the pokemon api (Pokeapi)
 ### Main Flow:
 - __Search:__ User enters the name of a pokemon. The system retrieves and displays its relevant information to the User. (e.g bst, ability, generation introduced, ect)
-- __Store/'Catch' Pokemon:__ User adds the pokemon to their team of 6 pokemon, system confirms this and stores the pokemon in a csv file.
+- __Store/'Catch' Pokemon:__ User adds the pokemon to their team of 6 pokemon, system confirms this and stores the pokemon in a json file.
 - __View Team:__ User can request to see their team, system shows the user their team.
-- __Remove/'release' Pokemon:__ User can remove a pokemon from their team, systems confirms this and changers the csv file accordingly.
+- __Remove/'release' Pokemon:__ User can remove a pokemon from their team, systems confirms this and changers the json file accordingly.
 - __Give Move:__ User can give one their pokemon moves. The system checks if the pokemon can learn that move and if it can, the pokemon is given that move.
 - __Remove Move:__ User can remove moves from the pokemon on their teams.
 - __Check:__ User can get indepth information on an aspect of a given pokemon. (e.g Pokedex entries, level up moveset, ect)
@@ -76,11 +79,16 @@
 
 ### Postconditions:
 - Pokemon data is retrieved, displayed, stored, removed, checked or Elite Four is challenged. A pokemon turn is played out.
+
+## Design
+![Ganttchart](/images/Ganttchart.png "Ganttchart")
+![structurechart](/images/structurechart.png "structurechart")
+
 ```
 BEGIN main()
     choice = ""
 
-    WHILE choice is not "end"
+    WHILE choice is not "end"w
         INPUT choice
         IF API request valid THEN
             If choice begins with "Search" THEN
@@ -116,12 +124,20 @@ BEGIN View_Team()
 
 END View_Team()
 ```
+![mainFlowchart](/images/mainFlowchart.png "mainFlowchart")
+![viewTeamFlowchart](/images/viewTeamFlowchart.png "viewTeamFlowchart")
+![searchPokemonFlowchart](/images/searchPokemonFlowchart.png "searchPokemonFlowchart")
+
 ## Data Dictionary:
 |Variable|Data Type|Format for Display|Size in Bytes|Size for Display|Description|Example|Validation|
 |---|---|---|---|---|---|---|---|
-|pokemonName|string|XX...XX||||||
-|PokemonMove|string|XX...XX||||||
-|Counter|integer|N||||||
-|TypeOfData|string|XX...XX||||||
-|UserTeam(display)|dictionary|||||||
-|UserTeam(json)|dictionary|||||||
+name
+moves
+move
+bst
+hp
+atk
+sp.atk
+def
+sp.def
+spd

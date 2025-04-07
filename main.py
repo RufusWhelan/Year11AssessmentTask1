@@ -4,8 +4,6 @@ from pokedex import *
 def main():
     userinput = ""
     pokemonName = ""
-    moveName = ""
-    typeOfData = ""
    
     start()
     while userinput != "end":
@@ -20,7 +18,7 @@ def main():
 
         elif userinput.startswith("check "):
             pokemonName = userinput.replace("check ", "") #removes the key term used so that the name of the pokemon can be found by the api
-            Check_Pokemon(pokemonName)
+            print(Check_Pokemon(pokemonName))
        
         elif userinput == "view team":
             print(View_Team())
@@ -48,6 +46,6 @@ def main():
             print("goodbye")
 
         else:
-            print("invalid input")
+            print("invalid input\n")
 
 main()

@@ -30,15 +30,26 @@ def start():
         else:
             print ("Hello there! Welcome to the world of pokémon! This world is inhabited by creatures called pokémon! For some people, pokémon are pets. Others use them for fights.") #since the file is empty, it is assumed that the user has not interacted with the system before
 
-    print("If you require instructions try typing 'help' ")
+    print("If you require instructions try typing 'help' \n")
 
 
 def Search_Pokemon(pokemon):
     response = requests.get(f"{pokeAPI}{pokemon.lower()}")
     if response.status_code == 200:
-        return "here's " + pokemon + "'s details!"
+        data = response.json()
+        pokemonId = data["species"]["url"]
+
+        dexResponse = requests.get(f"{pokemonId}")
+        dexData = dexResponse.json()
+        
+        baseStats = [baseStat["base_stat"] for baseStat in data["stats"]]
+        baseStatTotal = sum(baseStats)
+
+        english_entries = [entry["flavor_text"] for entry in dexData["flavor_text_entries"] if entry["language"]["name"] == "en"]
+        return(f"{english_entries[0].capitalize()}\nand its base stat total is {baseStatTotal}\n")
+
     else:
-        return("pokemon could not be found")
+        return("Pokemon could not be found.\n")
 
 def Store_Pokemon(pokemon):
     """
@@ -72,15 +83,15 @@ def Store_Pokemon(pokemon):
 
             with open("pokemonTeam.json", "w") as outfile:
                 outfile.write(jsonTeam) #saves the new pokemon to the json file
-            return(pokemon + " has been added to party!")  
+            return(pokemon.capitalize() + " has been added to party!\n")  
 
         else:
-            return("you already have 6 pokemon, remove one before you try to add another.")
+            return("You already have 6 pokemon, remove one before you try to add another.\n")
     else:
-        return("pokemon could not be found")
+        return("Pokemon could not be found.\n")
 
 
-def Check_Pokemon(pokemon):
+def Check_Pokemon(pokemonAndData):
     """
         determines which kind of data the user wants to retrieve from the api and then displays it to the user
         args:
@@ -90,28 +101,55 @@ def Check_Pokemon(pokemon):
             (str): the information the user requested about the pokemon
        
     """
+    try:
+        pokemon, datatype = pokemonAndData.split(' ', 1)
+    except:
+        return("Please fill both fields.\n")
+    response = requests.get(f"{pokeAPI}{pokemon.lower()}")
+    if response.status_code == 200:
+        data = response.json()
+
+        if "moveset" in datatype:
+            for move_data in data['moves']:
+                print(f"{move_data['move']['name']}\n")
+            return f"That is every move that {pokemon.capitalize()} learns\n"
+
+        elif "evolution line" in datatype:
+            pokemonId = data["species"]["url"]
+
+            dexResponse = requests.get(f"{pokemonId}")
+            dexData = dexResponse.json()
+            evolutionId = dexData["evolution_chain"]["url"]
+            evolutionResponse = requests.get(f"{evolutionId}")
+            evolutionData = evolutionResponse.json()
+            evolutionChain = []
+            currentEvo = evolutionData["chain"]
+
+            queue = [currentEvo]
+
+            while queue:
+                evoStage = queue.pop(0)
+                evolutionChain.append(evoStage["species"]["name"])
+
+                for nextEvo in evoStage["evolves_to"]:
+                    queue.append(nextEvo)
+
+            return "This is the evolution line of " + pokemon.capitalize() + ":\n" + '\n'.join(evolutionChain) + "\n"
+        
+
+        elif "bst" in datatype:
+            return f"This is the base stat total distribution of {pokemon}: hp: {data['stats'][0]['base_stat']}, atk: {data['stats'][1]['base_stat']}, sp.atk: {data['stats'][3]['base_stat']}, def: {data['stats'][2]['base_stat']}, sp.def: {data['stats'][4]['base_stat']}, spd: {data['stats'][5]['base_stat']}." + "\n"
 
 
-    if " level up moveset" in pokemon:
-        pokemon = pokemon.replace(" level up moveset", "")
-        return "this is the level up moveset of " + pokemon
-   
-    elif " evolution line" in pokemon:
-        pokemon = pokemon.replace(" evolution line", "")
-        return "this is the evolution line of " + pokemon
-   
-    elif " bst distribution" in pokemon:
-        pokemon = pokemon.replace(" bst distribution", "")
-        return "this is the base stat total distribution of " + pokemon
-   
-    elif " type" in pokemon:
-        pokemon = pokemon.replace(" type", "")
-        return "this is the type of " + pokemon
-   
-    #all these if and elif statments esentially do the same thing. They determine the type of data the user was looking for and then display it to the user.
-   
+        elif "type" in datatype:
+            types = [t["type"]["name"] for t in data["types"]]
+            return f"{pokemon.capitalize()} is: {', '.join(types)}." + "\n"
+        
+        else:
+            return "Invalid datatype.\n"
     else:
-        return "invalid input"
+        return "Pokemon does not exist.\n"
+
     
 
 def View_Team():
@@ -120,11 +158,12 @@ def View_Team():
         with open("pokemonTeam.json", "r") as openfile:
             pokemonTeam = json.load(openfile)  # assigns the dictionary in pokemonTeam.json to the variable pokemonTeam
    
-        print("your current team is:")
+        print("Your current team is:")
         for key in pokemonTeam:
             print(key) #displays the name of pokemon in the users party
+        return("\n")
     else:
-        print("you don't have a team.")
+        return("You don't have a team.\n")
 
 
 def Remove_Pokemon(pokemon):
@@ -137,28 +176,31 @@ def Remove_Pokemon(pokemon):
             del pokemonTeam[pokemon]
        
         else:
-            return(pokemon + " is not in your party")
+            return(pokemon.capitalize() + " is not in your party!\n")
 
         jsonTeam = json.dumps(pokemonTeam) #establishes a variable that json can read
 
         with open("pokemonTeam.json", "w") as outfile:
             outfile.write(jsonTeam) #saves the new pokemon to the json file
 
-        return(pokemon + " has been removed from party!")
+        return(pokemon.capitalize() + " has been removed from party!\n")
    
     else:
-        return("you don't have a team.")
+        return("You don't have a team.\n")
 
 
 def Give_Move(pokemonAndMove):
-    pokemon, move = pokemonAndMove.split(' ', 1)
+    try:
+        pokemon, move = pokemonAndMove.split(' ', 1)
+    except:
+        return("Please fill both fields.\n")
     if os.path.exists("pokemonTeam.json") and os.path.getsize("pokemonTeam.json") > 0: #checks if pokemonTeam.json exists and isn't empty
         with open("pokemonTeam.json", "r") as openfile:
             pokemonTeam = json.load(openfile)  # assigns the dictionary in pokemonTeam.json to the variable pokemonTeam
 
     if pokemon in pokemonTeam: #checks if the entered pokemon is in the users team
         response = requests.get(f"{pokeAPI}{pokemon.lower()}") #makes a request to the api using the pokemons name.
-        if response.status_code == 200: #checks if the request returns a value in the api
+        if response.status_code == 200:
             data = response.json() #converts the api webpage to a readable json file
             canLearnMove = False
 
@@ -177,20 +219,23 @@ def Give_Move(pokemonAndMove):
                     with open("pokemonTeam.json", "w") as outfile:
                         outfile.write(jsonTeam) #saves the new pokemon to the json file
 
-                    return pokemon + " was given " + move
+                    return (f"{pokemon.capitalize()}  was given {move}." + "\n")
                 
                 else:
-                    return(pokemon + " aleady has 4 moves")
+                    return(pokemon.capitalize() + " aleady has 4 moves\n")
             else:
-                return(pokemon + " cannot learn that move")
+                return(pokemon.capitalize() + " cannot learn that move\n")
         else:
-            return("Could not connect to api")
+            return("Could not connect to api\n")
     else:
-        return("you do not have that pokemon in your team")
+        return("You do not have that pokemon in your team.\n")
 
 
 def remove_Move(pokemonAndMove):
-    move, pokemon = pokemonAndMove.split(' from ', 1)
+    try:
+        move, pokemon = pokemonAndMove.split(' from ', 1)
+    except:
+        return("Please fill both fields.\n")
     if os.path.exists("pokemonTeam.json") and os.path.getsize("pokemonTeam.json") > 0: #checks if pokemonTeam.json exists and isn't empty
         with open("pokemonTeam.json", "r") as openfile:
             pokemonTeam = json.load(openfile)  # assigns the dictionary in pokemonTeam.json to the variable pokemonTeam
@@ -200,45 +245,46 @@ def remove_Move(pokemonAndMove):
                 del pokemonTeam[pokemon]["moves"][move]
        
             elif move not in pokemonTeam[pokemon]["moves"]:
-                return(pokemon + " does not have that move")
+                return(pokemon.capitalize() + " does not have that move.\n")
        
             else:
-                return("invalid input ")
+                return("Invalid input")
         else:
-            return(pokemon + " isn't in your party")
+            return(pokemon.capitalize() + " isn't in your party.\n")
 
         jsonTeam = json.dumps(pokemonTeam) #establishes a variable that json can read
 
         with open("pokemonTeam.json", "w") as outfile:
             outfile.write(jsonTeam) #saves the new pokemon to the json file
 
-        return(move + " has been removed from " + pokemon + "!")
+        return(move + " has been removed from " + pokemon.capitalize() + "!\n")
    
     else:
-        return("you don't have a team.")
+        return("You don't have a team.\n")
     
 
-#def Challenge():
+def Challenge():
+    return("Coming soon...\n")
 
 
 def help():
     """ Exists to explain how the system works to first time users """
    
-    return """the pokedex works based off of keywords followed by the name of a pokemon or other form of information.
-          the key words are:
-          search (pokemon) - returns information about the entered pokemon if it exists
-          store (pokemon) - adds the entered pokemon to your team. You CANNOT store multiple of the same pokemon
-          check (pokemon) (type of data) - checks specific information for a pokemon.
+    return """The pokedex works based off of keywords followed by the name of a pokemon or other form of information.
+          The key words are:
+          search (pokemon) - Returns information about the entered pokemon if it exists.
+          store (pokemon) - Adds the entered pokemon to your team. You CANNOT store multiple of the same pokemon.
+          check (pokemon) (type of data) - Checks specific information for a pokemon.
           your options for "check" are:
-            level up moveset
+            moveset
             evolution line
-            bst distribution
+            bst
             type
-          view team - displays the pokemon in your party
-          remove (pokemon) - removes entered pokemon from your team
-          give move (move) (pokemon) - gives your pokemon the entered move if they are compattible
-          challenge - challenges the elite four and turns the pokedex into a battle simulator. WARNING there is no turning back once you enter the battle simulator until you lose. (there is a different list of commands for the battle sim)
-          end - quits the program
+          view team - Displays the pokemon in your party.
+          remove (pokemon) - Removes entered pokemon from your team.
+          give move (move) (pokemon) - Gives your pokemon the entered move if they are compattible. NOTE spaces in moves are replaced with "-" so for example the move fire punch is now fire-punch.
+          challenge - Challenges the elite four and turns the pokedex into a battle simulator. NOTE not implemented currently, will work in a future update.
+          end - quits the program\n
           """
 
 
