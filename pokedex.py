@@ -3,7 +3,6 @@ import json
 import os
 
 pokeAPI = "https://pokeapi.co/api/v2/pokemon/"
-
 def start():
     """
         only runs once to determine whether or not there are already pokemon in the users party and to allow the user to reset
@@ -36,7 +35,18 @@ def start():
 def Search_Pokemon(pokemon):
     response = requests.get(f"{pokeAPI}{pokemon.lower()}")
     if response.status_code == 200:
-        return "here's " + pokemon + "'s details!"
+        data = response.json()
+        pokemonId = data["species"]["url"]
+
+        dexResponse = requests.get(f"{pokemonId}")
+        dexData = dexResponse.json()
+        
+        baseStats = [baseStat["base_stat"] for baseStat in data["stats"]]
+        baseStatTotal = sum(baseStats)
+
+        english_entries = [entry["flavor_text"] for entry in dexData["flavor_text_entries"] if entry["language"]["name"] == "en"]
+        return(f"{english_entries[0]}\nand its base stat total is {baseStatTotal}")
+
     else:
         return("pokemon could not be found")
 
@@ -80,7 +90,7 @@ def Store_Pokemon(pokemon):
         return("pokemon could not be found")
 
 
-def Check_Pokemon(pokemon):
+def Check_Pokemon(pokemonAndData):
     """
         determines which kind of data the user wants to retrieve from the api and then displays it to the user
         args:
@@ -90,29 +100,54 @@ def Check_Pokemon(pokemon):
             (str): the information the user requested about the pokemon
        
     """
+    pokemon, datatype = pokemonAndData.split(' ', 1)
+    response = requests.get(f"{pokeAPI}{pokemon.lower()}")
+    if response.status_code == 200:
+        data = response.json()
 
+        if "moveset" in datatype:
+            for move_data in data['moves']:
+                print(move_data['move']['name'])
+            return f"That is every move that {pokemon} learns"
 
-    if " level up moveset" in pokemon:
-        pokemon = pokemon.replace(" level up moveset", "")
-        return "this is the level up moveset of " + pokemon
-   
-    elif " evolution line" in pokemon:
-        pokemon = pokemon.replace(" evolution line", "")
-        return "this is the evolution line of " + pokemon
-   
-    elif " bst distribution" in pokemon:
-        pokemon = pokemon.replace(" bst distribution", "")
-        return "this is the base stat total distribution of " + pokemon
-   
-    elif " type" in pokemon:
-        pokemon = pokemon.replace(" type", "")
-        return "this is the type of " + pokemon
-   
-    #all these if and elif statments esentially do the same thing. They determine the type of data the user was looking for and then display it to the user.
-   
+        elif "evolution line" in datatype:
+            pokemonId = data["species"]["url"]
+
+            dexResponse = requests.get(f"{pokemonId}")
+            dexData = dexResponse.json()
+            evolutionId = dexData["evolution_chain"]["url"]
+            evolutionResponse = requests.get(f"{evolutionId}")
+            evolutionData = evolutionResponse.json()
+            evolutionChain = []
+            currentEvo = evolutionData["chain"]
+
+            while currentEvo:
+
+                evolutionChain.append(currentEvo["species"]["name"])
+                if currentEvo["evolves_to"]:
+                    for evo in currentEvo["evolves_to"]:
+                        evolutionChain.append(evo["species"]["name"])
+                    break
+                else:
+                    currentEvo = None
+            return f"This is the evolution line of {pokemon}: {', '.join(evolutionChain)}"
+        
+
+        elif "bst" in datatype:
+            return f"This is the base stat total distribution of {pokemon}: hp: {data["stats"][0]["base_stat"]}, atk: {data["stats"][1]["base_stat"]}, sp.atk: {data["stats"][3]["base_stat"]}, def: {data["stats"][2]["base_stat"]}, sp.def: {data["stats"][4]["base_stat"]}, spd: {data["stats"][5]["base_stat"]}."
+
+        elif "type" in datatype:
+            types = [t["type"]["name"] for t in data["types"]]
+            return f"{pokemon} is: {', '.join(types)}."
+        
+        else:
+            return "unvalid datatype"
     else:
-        return "invalid input"
+        return "Pokemon does not exist"
     
+        #all these if and elif statments esentially do the same thing. They determine the type of data the user was looking for and then display it to the user.
+        #barry: needs GUI, needs better format for display a bit confusing
+        #miles:
 
 def View_Team():
     pokemonTeam = {}
@@ -230,9 +265,9 @@ def help():
           store (pokemon) - adds the entered pokemon to your team. You CANNOT store multiple of the same pokemon
           check (pokemon) (type of data) - checks specific information for a pokemon.
           your options for "check" are:
-            level up moveset
+            moveset
             evolution line
-            bst distribution
+            bst
             type
           view team - displays the pokemon in your party
           remove (pokemon) - removes entered pokemon from your team
