@@ -131,13 +131,15 @@ END View_Team()
 ## Data Dictionary:
 |Variable|Data Type|Format for Display|Size in Bytes|Size for Display|Description|Example|Validation|
 |---|---|---|---|---|---|---|---|
-name
-moves
-move
-bst
-hp
-atk
-sp.atk
-def
-sp.def
-spd
+|name|string|text|12|12|the name of the pokemon|charmander|must be a non empty string|
+|move|string|text|27|27|the name of the move on the pokemon|fire-punch|must be a non empty string with dashes(-) instead of spaces|
+|hp|integer|whole number|6|3|the hit points stat of the entered pokemon|39|must be a whole number|
+|atk|integer|whole number|6|3|the atack stat of the entered pokemon|52|must be a whole number|
+|sp.atk|integer|whole number|6|3|the special attack stat of the entered pokemon|60|must be a whole number|
+|def|integer|whole number|6|3|the defense stat of the entered pokemon|43|must be a whole number|
+|sp.def|integer|whole number|6|3|the special defense stat of the entered pokemon|50|must be a whole number|
+|spd|integer|whole number|6|3|the speed stat of the entered pokemon|65|must be a whole number|
+
+## Maintenance
+3. If a bug was discovered in the program after its deployment, I would methodically debug my code to determine what was causing the bug, and how to fix it.  I would analyse the bug to determine what function resulted in the error and what kind of error it was (runtime, syntax or logical) then I would use the vs code debugger to analyse short blocks of code within the function. Once an error occured I would attempt to determine why it has happened and then implement a solution before pushing the fixed program to github.
+4. in the future I would continue to use the waterfall method to ensure that new changes are built from the ground up and implemented overtime, additionally I would continue to make regular github updates to keep a log of all changes made to the project.
