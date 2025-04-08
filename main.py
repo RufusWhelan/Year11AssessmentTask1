@@ -7,7 +7,7 @@ def main():
    
     start()
     while userinput != "end":
-        userinput = input("input: ").lower()
+        userinput = input("input: ").lower() #
         if userinput.startswith("search "):
             pokemonName = userinput.replace("search ", "") #removes the key term used so that the name of the pokemon can be found by the api
             print(Search_Pokemon(pokemonName))
@@ -31,21 +31,24 @@ def main():
             pokemonName = userinput.replace("give ", "") #removes the key term used so that the name of the pokemon can be found by the api
             print(Give_Move(pokemonName))
        
-        elif userinput.startswith("remove ")  and "from" in userinput:
-            pokemonName = userinput.replace ("remove ", "")
+        elif userinput.startswith("remove ")  and "from" in userinput: #makes a distinction between remove pokemon and remove move by requiring the user to enter from
+            pokemonName = userinput.replace ("remove ", "") #removes the key term used so that the name of the pokemon can be found by the api
             print(remove_Move(pokemonName))
        
         elif userinput == "challenge":
             print("Goodluck")
-            #will implement once rest of project is complete
+            #will implement in next task
 
         elif userinput == "help":
             print(help())
 
+
         elif userinput == "end":
             print("goodbye")
 
+
         else:
             print("invalid input\n")
+
 
 main()
