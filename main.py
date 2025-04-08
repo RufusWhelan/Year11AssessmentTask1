@@ -4,8 +4,6 @@ from pokedex import *
 def main():
     userinput = ""
     pokemonName = ""
-    moveName = ""
-    typeOfData = ""
    
     start()
     while userinput != "end":
@@ -48,6 +46,6 @@ def main():
             print("goodbye")
 
         else:
-            print("invalid input")
+            print("invalid input\n")
 
 main()
