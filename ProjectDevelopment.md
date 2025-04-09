@@ -81,7 +81,7 @@
 
 ## Design
 ![Ganttchart](/images/Ganttchart.png "Ganttchart")
-![structurechart](/images/structurechart.png "structurechart")
+![structurechart](/images/structureChart.png "structurechart")
 
 ### pseudocode
 ```
